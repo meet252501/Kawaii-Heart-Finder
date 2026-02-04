@@ -164,6 +164,15 @@
             width: 200vw; height: 200vw; background: radial-gradient(circle, var(--kawaii-pink) 0%, transparent 70%);
             position: absolute; animation: spin 4s linear infinite; opacity: 0.3;
         }
+        /* Custom Toast Notification */
+        .kawaii-toast {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: var(--kawaii-pink-dark); color: white; padding: 12px 25px; border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(255,133,161,0.4); z-index: 30000; font-weight: 700;
+            display: flex; align-items: center; gap: 10px; backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3); pointer-events: none; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .kawaii-toast.active { transform: translateX(-50%) translateY(20px); }
     </style>
 </head>
 <body>
@@ -236,6 +245,16 @@
                             <div class="chip" onclick="tag(this, 'Music')">Music 🎵</div>
                             <div class="chip" onclick="tag(this, 'Art')">Art 🎨</div>
                             <div class="chip" onclick="tag(this, 'Travel')">Travel ✈️</div>
+                            <div class="chip" onclick="tag(this, 'Cafe Hopping')">Cafe Hopping ☕</div>
+                            <div class="chip" onclick="tag(this, 'Cosplay')">Cosplay 🎭</div>
+                            <div class="chip" onclick="tag(this, 'Fashion')">Fashion 👗</div>
+                            <div class="chip" onclick="tag(this, 'Baking')">Baking 🧁</div>
+                            <div class="chip" onclick="tag(this, 'Fitness')">Fitness 🧘</div>
+                            <div class="chip" onclick="tag(this, 'Cats')">Cats 🐱</div>
+                            <div class="chip" onclick="tag(this, 'Photography')">Photography 📸</div>
+                            <div class="chip" onclick="tag(this, 'Coding')">Coding 💻</div>
+                            <div class="chip" onclick="tag(this, 'Beach Days')">Beach 🏖️</div>
+                            <div class="chip" onclick="tag(this, 'Movie Night')">Movies 🎬</div>
                         </div>
                     </div>
                     <div class="btn-group">
@@ -340,6 +359,19 @@
         let likedProfile = null;
         let selectedTags = new Set();
 
+        function showToast(msg, icon = "🎀") {
+            let t = document.getElementById('toast');
+            if(!t) {
+                t = document.createElement('div');
+                t.id = 'toast';
+                t.className = 'kawaii-toast';
+                document.body.appendChild(t);
+            }
+            t.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3000);
+        }
+
         function setTheme(theme, el) {
             document.body.className = 'theme-' + theme;
             document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
@@ -397,7 +429,7 @@
                 document.getElementById('revealSection').style.display = 'block';
                 render();
             } catch (e) {
-                alert("Could not load matches! 🛡️");
+                showToast("Could not load matches! 🛡️", "⚠️");
                 document.getElementById('regCard').style.display = 'block';
             }
         }
@@ -454,7 +486,7 @@
 
         function move(n) {
             if(n > currentStep) {
-                if(currentStep === 1 && (!document.getElementById('name').value || !document.getElementById('gender').value)) return alert("Missing info, cutie! 🥺");
+                if(currentStep === 1 && (!document.getElementById('name').value || !document.getElementById('gender').value)) return showToast("Missing info, cutie! 🥺", "🌸");
             }
             const outDir = n > currentStep ? -50 : 50;
             const inDir = n > currentStep ? 50 : -50;
@@ -483,7 +515,7 @@
             
             const p = document.getElementById('p_in').files[0];
             const q = document.getElementById('q_in').files[0];
-            if(!p || !q) return alert("We need your photo & QR! 📸📲");
+            if(!p || !q) return showToast("We need your photo & QR! 📸📲", "✨");
             fd.append('photo', p);
             fd.append('socialQr', q);
 
@@ -523,10 +555,10 @@
                         }, 500);
                     }});
                 } else {
-                    alert(data.error || "Magic failed. Try again!");
-                    location.reload();
+                    showToast(data.error || "Magic failed. Try again!", "⚠️");
+                    setTimeout(() => location.reload(), 2000);
                 }
-            } catch (e) { alert("Connectivity void encountered! 🛡️"); location.reload(); }
+            } catch (e) { showToast("Connectivity void encountered! 🛡️", "🛑"); setTimeout(() => location.reload(), 2000); }
         }
 
         function render() {
@@ -573,7 +605,10 @@
                 onComplete: () => {
                     top.remove();
                     if(dir === 'right') celebrate(matches[matches.length - cs.length]);
-                    else if(document.querySelectorAll('.card').length === 0) { alert("No more matches today! 🌸"); location.reload(); }
+                    else if(document.querySelectorAll('.card').length === 0) { 
+                        showToast("No more matches today! 🌸", "☁️"); 
+                        setTimeout(() => location.reload(), 2500); 
+                    }
                 }
             });
         }

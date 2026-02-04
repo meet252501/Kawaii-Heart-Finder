@@ -1823,6 +1823,16 @@
                                 <div class="chip" onclick="toggleChip(this)">Foodie 🍔</div>
                                 <div class="chip" onclick="toggleChip(this)">Photography 📸</div>
                                 <div class="chip" onclick="toggleChip(this)">Reading 📚</div>
+                                <div class="chip" onclick="toggleChip(this)">Cosplay 🎭</div>
+                                <div class="chip" onclick="toggleChip(this)">Fashion 👗</div>
+                                <div class="chip" onclick="toggleChip(this)">Baking 🧁</div>
+                                <div class="chip" onclick="toggleChip(this)">Fitness 🧘</div>
+                                <div class="chip" onclick="toggleChip(this)">Singing 🎤</div>
+                                <div class="chip" onclick="toggleChip(this)">Beach 🏖️</div>
+                                <div class="chip" onclick="toggleChip(this)">Movies 🎬</div>
+                                <div class="chip" onclick="toggleChip(this)">Gardening 🌿</div>
+                                <div class="chip" onclick="toggleChip(this)">Thrifting 👕</div>
+                                <div class="chip" onclick="toggleChip(this)">Stargazing 🔭</div>
                             </div>
                         </div>
                     </div>
@@ -2466,18 +2476,19 @@
             alertBox.style.top = '20px';
             alertBox.style.left = '50%';
             alertBox.style.transform = 'translateX(-50%)';
-            alertBox.style.background = '#ff4d4d'; // Red for Alert
+            alertBox.style.background = 'var(--kawaii-pink-dark)'; // Pink for Kawaii Alert
             alertBox.style.color = 'white';
-            alertBox.style.padding = '15px 25px';
+            alertBox.style.padding = '15px 30px';
             alertBox.style.borderRadius = '50px';
-            alertBox.style.boxShadow = '0 10px 30px rgba(255, 77, 77, 0.4)';
-            alertBox.style.zIndex = '99999';
+            alertBox.style.boxShadow = '0 10px 40px rgba(255, 133, 161, 0.5)';
+            alertBox.style.zIndex = '1000000';
             alertBox.style.fontWeight = '700';
-            alertBox.style.fontSize = '0.9rem';
+            alertBox.style.fontSize = '1.1rem';
             alertBox.style.display = 'flex';
             alertBox.style.alignItems = 'center';
-            alertBox.style.gap = '10px';
-            alertBox.innerHTML = `<span>⚠️</span> ${msg}`;
+            alertBox.style.gap = '15px';
+            alertBox.style.border = '3px solid white';
+            alertBox.innerHTML = `<span>🌸</span> ${msg}`;
             
             document.body.appendChild(alertBox);
 
