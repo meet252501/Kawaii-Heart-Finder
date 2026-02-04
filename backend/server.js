@@ -13,10 +13,26 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Security Middleware
-app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Security Middleware (Relaxed for Inline Scripts)
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'", // Allow inline scripts
+          "https://cdnjs.cloudflare.com", // Allow GSAP
+          "https://cdn.jsdelivr.net", // Allow Confetti
+        ],
+        "img-src": ["'self'", "data:", "blob:"], // Allow data URIs for images
+      },
+    },
+  }),
+);
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -183,34 +199,28 @@ app.post(
 
       if (!socialPath) {
         if (photoPath && fs.existsSync(photoPath)) fs.unlinkSync(photoPath);
-        return res
-          .status(400)
-          .json({
-            success: false,
-            error: "Social QR is mandatory! Please upload yours. 📲",
-          });
+        return res.status(400).json({
+          success: false,
+          error: "Social QR is mandatory! Please upload yours. 📲",
+        });
       }
 
       if (photoPath && !(await checkImageSafety(photoPath))) {
         if (fs.existsSync(photoPath)) fs.unlinkSync(photoPath);
         if (socialPath && fs.existsSync(socialPath)) fs.unlinkSync(socialPath);
-        return res
-          .status(400)
-          .json({
-            success: false,
-            error: "AI blocked your photo! Please use a cleaner one. 🛡️",
-          });
+        return res.status(400).json({
+          success: false,
+          error: "AI blocked your photo! Please use a cleaner one. 🛡️",
+        });
       }
 
       if (socialPath && !(await checkImageSafety(socialPath))) {
         if (photoPath && fs.existsSync(photoPath)) fs.unlinkSync(photoPath);
         if (socialPath && fs.existsSync(socialPath)) fs.unlinkSync(socialPath);
-        return res
-          .status(400)
-          .json({
-            success: false,
-            error: "AI blocked your Social QR! Please use a valid QR code. 🛡️",
-          });
+        return res.status(400).json({
+          success: false,
+          error: "AI blocked your Social QR! Please use a valid QR code. 🛡️",
+        });
       }
 
       const newUser = {
