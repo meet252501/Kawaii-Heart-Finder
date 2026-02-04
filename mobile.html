@@ -3,354 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Kawaii Heart Seeker | Mobile</title>
-    <!-- Kawaii Fonts -->
+    <title>Kawaii Match Pro | Mobile</title>
+    <!-- Dependencies -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root {
-            --kawaii-pink: #ff9a9e;
-            --kawaii-grad-1: #fecfef;
-            --kawaii-grad-2: #ff9a9e;
-            --text-color: #5d405c;
-            --white: #ffffff;
+            --kawaii-pink: #ffc2d1;
+            --kawaii-pink-dark: #ff85a1;
+            --kawaii-mint: #e2f0cb;
+            --kawaii-lavender: #e0c3fc;
+            --kawaii-text: #4a3050;
+            --kawaii-white: #ffffff;
+            --bg-main: #fff5f7;
             --glass: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(255, 255, 255, 0.5);
-            --shadow: 0 8px 32px 0 rgba(255, 105, 135, 0.25);
+            --shadow: 0 8px 32px 0 rgba(255, 105, 135, 0.2);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Fredoka', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        /* Themes */
+        body.theme-ocean { --bg-main: #e0f2fe; --kawaii-pink-dark: #0ea5e9; --kawaii-pink: #bae6fd; }
+        body.theme-forest { --bg-main: #f0fdf4; --kawaii-pink-dark: #22c55e; --kawaii-pink: #bbf7d0; }
+        body.theme-moonlight { 
+            --bg-main: #0c0c1e; --kawaii-text: #e0e7ff; 
+            --glass: rgba(15, 23, 42, 0.8); --glass-border: rgba(255,255,255,0.1);
+            --kawaii-pink-dark: #818cf8; --kawaii-pink: #4f46e5;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background: linear-gradient(135deg, var(--kawaii-grad-1) 0%, var(--kawaii-grad-2) 100%);
+            background: var(--bg-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            color: var(--text-color);
+            padding: 15px;
+            color: var(--kawaii-text);
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
-        /* Floating Background Particles (CSS Only) */
-        .bg-particle {
-            position: fixed;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            animation: float infinite linear;
-        }
-        .p1 { width: 100px; height: 100px; top: 10%; left: -20px; animation-duration: 8s; }
-        .p2 { width: 150px; height: 150px; bottom: 10%; right: -30px; animation-duration: 12s; }
-        .p3 { width: 50px; height: 50px; top: 40%; right: 10%; animation-duration: 6s; }
+        /* Ambience */
+        #ambientOverlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+        .petal, .bubble, .firefly { position: absolute; animation: floatUp linear infinite; }
+        @keyframes floatUp { from { transform: translateY(110vh) rotate(0); opacity: 1; } to { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
 
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
+        /* Navigation */
+        .top-nav { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; z-index: 1000; }
+        .theme-box { background: var(--glass); padding: 5px; border-radius: 30px; backdrop-filter: blur(10px); display: flex; border: 1px solid var(--glass-border); }
+        .theme-dot { width: 34px; height: 34px; border: none; background: none; font-size: 1.1rem; border-radius: 50%; opacity: 0.6; transition: 0.3s; }
+        .theme-dot.active { opacity: 1; background: var(--kawaii-pink-dark); color: white; transform: scale(1.1); }
+        .music-chip { background: var(--glass); backdrop-filter: blur(10px); padding: 8px 15px; border-radius: 20px; font-weight: 700; border: 1px solid var(--glass-border); font-size: 0.8rem; }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
+        /* Main App Container */
+        .app-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .kawaii-card { 
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            padding: 30px 25px; border-radius: 35px; box-shadow: var(--shadow); border: 1px solid var(--glass-border); 
+            position: relative; overflow: hidden;
         }
 
-        .mascot-img {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            border: 4px solid var(--white);
-            box-shadow: var(--shadow);
-            animation: bounce 2s infinite ease-in-out;
-        }
+        header { text-align: center; margin-bottom: 20px; }
+        .mascot { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; box-shadow: var(--shadow); animation: bounce 2s infinite ease-in-out; cursor: pointer; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        h1 { font-size: 1.8rem; color: var(--kawaii-pink-dark); margin-top: 10px; }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
+        /* Form Steps */
+        .progress-bar { width: 100%; height: 6px; background: rgba(0,0,0,0.05); border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { width: 25%; height: 100%; background: var(--kawaii-pink-dark); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        h1 {
-            font-size: 1.8rem;
-            color: var(--white);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 5px;
-        }
+        .step { display: none; }
+        .step.active { display: block; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
 
-        .subtitle {
-            font-size: 0.95rem;
-            color: var(--white);
-            opacity: 0.9;
-            font-weight: 500;
+        .group { margin-bottom: 20px; }
+        label { display: block; font-weight: 700; color: var(--kawaii-pink-dark); margin-bottom: 10px; font-size: 0.95rem; }
+        input, select, textarea { 
+            width: 100%; padding: 16px; border-radius: 20px; border: 2px solid transparent; 
+            background: rgba(255,255,255,0.7); font-size: 16px; color: var(--kawaii-text); font-weight: 500; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--kawaii-pink-dark); background: white; transform: translateY(-2px); }
 
-        /* Glassmorphism Card */
-        .kawaii-box {
-            width: 100%;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 30px 25px;
-            border-radius: 35px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { 
+            padding: 10px 18px; border-radius: 50px; background: rgba(255,255,255,0.5); 
+            border: 1px solid var(--glass-border); font-size: 0.85rem; font-weight: 600; transition: 0.2s;
         }
+        .chip.active { background: var(--kawaii-pink-dark); color: white; border-color: var(--kawaii-pink-dark); transform: translateY(-2px); }
 
-        @keyframes slideUp {
-            to { opacity: 1; transform: translateY(0); }
+        .upload-zone { border: 2px dashed var(--kawaii-pink); border-radius: 25px; padding: 20px; text-align: center; position: relative; }
+        .upload-zone input { position: absolute; inset: 0; opacity: 0; }
+        .preview-box { width: 100%; max-height: 150px; border-radius: 15px; margin-top: 10px; display: none; object-fit: contain; }
+
+        /* Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 30px; }
+        .btn { flex: 1; padding: 18px; border-radius: 50px; font-weight: 700; border: none; font-size: 1.1rem; transition: 0.2s; }
+        .btn-next { background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%); color: white; box-shadow: 0 8px 20px rgba(255,107,107,0.3); }
+        .btn-back { background: rgba(0,0,0,0.05); color: var(--kawaii-text); }
+        .btn:active { transform: scale(0.95); }
+
+        /* Swipe Results */
+        #revealSection { display: none; }
+        .swipe-deck { position: relative; width: 100%; height: 420px; perspective: 1000px; }
+        .card { 
+            position: absolute; inset: 0; background: white; border-radius: 30px; border: 4px solid var(--kawaii-pink); 
+            box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transform-origin: center bottom; touch-action: none;
         }
+        .card-img { width: 100%; height: 60%; object-fit: cover; border-bottom: 2px solid var(--kawaii-pink); }
+        .card-body { padding: 15px; text-align: left; }
+        .card-name { font-size: 1.4rem; font-weight: 800; color: var(--kawaii-pink-dark); }
+        .card-match { position: absolute; top: 15px; right: 15px; background: white; padding: 5px 12px; border-radius: 50px; font-weight: 800; color: var(--kawaii-pink-dark); font-size: 0.75rem; }
 
-        /* Forms */
-        .group {
-            margin-bottom: 20px;
-        }
+        .swipe-actions { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .action-btn { width: 65px; height: 65px; border-radius: 50%; border: none; font-size: 1.8rem; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
 
-        label {
-            display: block;
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-            color: var(--text-color);
-            padding-left: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid transparent;
-            border-radius: 20px;
-            font-size: 16px;
-            color: var(--text-color);
-            transition: all 0.2s;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        input:focus, select:focus {
-            border-color: #ff9a9e;
-            background: #fff;
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(255, 105, 135, 0.15);
-            outline: none;
-        }
-
-        /* Chips */
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .chip {
-            padding: 12px 18px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 105, 135, 0.2);
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            flex: 1 1 auto;
-            text-align: center;
-            transition: all 0.2s;
-            color: var(--text-color);
-        }
-
-        .chip.selected {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 5px 10px rgba(255, 105, 135, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* Button */
-        .btn-primary {
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-            margin-top: 10px;
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
-            transition: transform 0.1s;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.96);
-        }
-
-        .hidden { display: none !important; }
+        /* Winner Card */
+        #matchCelebration { display: none; text-align: center; }
+        .soulmate-img { width: 180px; height: 180px; border-radius: 50%; border: 8px solid var(--kawaii-pink); margin: 20px auto; object-fit: cover; }
+        .qr-card { background: white; padding: 15px; border-radius: 25px; border: 3px solid var(--kawaii-pink-dark); margin: 20px 0; }
         
-        /* Spinner */
-        .loader {
-            width: 48px;
-            height: 48px;
-            border: 5px solid #FFF;
-            border-bottom-color: #ff6b6b;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* Utils */
+        .hidden { display: none !important; }
+        #loading { text-align: center; padding: 50px; display: none; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--kawaii-pink); border-top-color: var(--kawaii-pink-dark); border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
     </style>
 </head>
 <body>
 
-    <div class="bg-particle p1"></div>
-    <div class="bg-particle p2"></div>
-    <div class="bg-particle p3"></div>
+    <div id="ambientOverlay"></div>
 
-    <header>
-        <img src="assets/mascot.png" class="mascot-img" alt="Mascot">
-        <h1>Kawaii Match</h1>
-        <div class="subtitle">Premium Mobile Edition ✨</div>
-        <div style="background: rgba(255,255,255,0.25); border-radius: 15px; padding: 10px; margin: 15px auto 0; font-size: 0.85rem; max-width: 90%; border: 1px solid rgba(255,255,255,0.4);">
-            💡 <b>Pro Tip:</b> Switch to <b>Desktop</b> for the full innovative 3D experience! 💻
+    <div class="top-nav">
+        <div class="theme-box">
+            <button class="theme-dot active" onclick="setTheme('default', this)">🌸</button>
+            <button class="theme-dot" onclick="setTheme('ocean', this)">🌊</button>
+            <button class="theme-dot" onclick="setTheme('forest', this)">🌿</button>
+            <button class="theme-dot" onclick="setTheme('moonlight', this)">🌙</button>
         </div>
-    </header>
+        <button class="music-chip" onclick="toggleMusic()">🎵 <span id="musTxt">Lofi</span></button>
+    </div>
 
-    <div class="kawaii-box" id="mobileForm">
-        <!-- Step 1 -->
-        <div class="step active" id="step1">
-            <div class="group">
-                <label>Name 🌸</label>
-                <input type="text" id="name" placeholder="Your name...">
-            </div>
-            <div class="group">
-                <label>Email 💌</label>
-                <input type="email" id="email" placeholder="you@example.com">
-            </div>
-            <div class="group">
-                <label>Age 🎂</label>
-                <input type="number" id="age" placeholder="18+">
-            </div>
-             <div class="group">
-                <label>I am... ⚧️</label>
-                <div class="chips" id="genderChips">
-                    <div class="chip" onclick="selectGender(this, 'Male')">Boy 💙</div>
-                    <div class="chip" onclick="selectGender(this, 'Female')">Girl 💖</div>
-                    <div class="chip" onclick="selectGender(this, 'Non-binary')">Enby 💜</div>
+    <div class="app-container">
+        <!-- Registration Form -->
+        <div class="kawaii-card" id="regCard">
+            <header>
+                <img src="assets/mascot.png" class="mascot" alt="Mascot" onclick="boopMascot()">
+                <h1>Kawaii Match Pro</h1>
+                <p id="subTxt" style="opacity:0.8; font-size:0.9rem;">The Ultimate Soulmate Engine ✨</p>
+            </header>
+
+            <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+
+            <form id="regForm">
+                <!-- Step 1 -->
+                <div class="step active" id="s1">
+                    <div class="group"><label>Soul Name 🌸</label><input type="text" id="name" placeholder="E.g. Yuki-Chan"></div>
+                    <div class="group"><label>Digital Letter (Email) 💌</label><input type="email" id="email" placeholder="you@love.com"></div>
+                    <div class="group"><label>Earthly Cycles (Age) 🎂</label><input type="number" id="age" placeholder="18+"></div>
+                    <div class="group"><label>Vibe Energy ☯️</label>
+                        <div class="chips" id="genCh">
+                            <div class="chip" onclick="sel('gender', 'Male', this)">Boy 💙</div>
+                            <div class="chip" onclick="sel('gender', 'Female', this)">Girl 💖</div>
+                            <div class="chip" onclick="sel('gender', 'Non-binary', this)">NB 💜</div>
+                        </div>
+                        <input type="hidden" id="gender">
+                    </div>
+                    <button type="button" class="btn btn-next" onclick="move(2)">Continue 💖</button>
                 </div>
-                <input type="hidden" id="gender">
-            </div>
 
-            <div class="group">
-                <label>Interested in... 🔭</label>
-                <div class="chips" id="interestChips">
-                    <div class="chip" onclick="selectInterest(this, 'Female')">Girls 👩</div>
-                    <div class="chip" onclick="selectInterest(this, 'Male')">Boys 👨</div>
-                    <div class="chip" onclick="selectInterest(this, 'Both')">Everyone 🌈</div>
+                <!-- Step 2 -->
+                <div class="step" id="s2">
+                    <div class="group"><label>Target Dimension 🔭</label>
+                        <div class="chips" id="intCh">
+                            <div class="chip" onclick="sel('intIn', 'Female', this)">Girls 👩</div>
+                            <div class="chip" onclick="sel('intIn', 'Male', this)">Boys 👨</div>
+                            <div class="chip" onclick="sel('intIn', 'Everyone', this)">All 🌈</div>
+                        </div>
+                        <input type="hidden" id="intIn">
+                    </div>
+                    <div class="group"><label>Connection Goal 💍</label>
+                        <select id="lookingFor">
+                            <option>Long-term Love 💍</option>
+                            <option>Bestie for Life �</option>
+                            <option>Casual Cuteness ☁️</option>
+                        </select>
+                    </div>
+                    <div class="group"><label>Interests 🎨</label>
+                        <div class="chips" id="vibeCh">
+                            <div class="chip" onclick="tag(this, 'Gaming')">Gaming �</div>
+                            <div class="chip" onclick="tag(this, 'Anime')">Anime �</div>
+                            <div class="chip" onclick="tag(this, 'Music')">Music 🎵</div>
+                            <div class="chip" onclick="tag(this, 'Art')">Art 🎨</div>
+                            <div class="chip" onclick="tag(this, 'Travel')">Travel ✈️</div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-back" onclick="move(1)">Back</button>
+                        <button type="button" class="btn btn-next" onclick="move(3)">Forward ✨</button>
+                    </div>
                 </div>
-                <input type="hidden" id="interestedIn">
+
+                <!-- Step 3 -->
+                <div class="step" id="s3">
+                    <div class="group"><label>Your Best Side 📸</label>
+                        <div class="upload-zone">
+                            <span>Upload Portrait... 🎞️</span>
+                            <input type="file" id="p_in" accept="image/*" onchange="prev(this, 'p_pr')">
+                            <img id="p_pr" class="preview-box">
+                        </div>
+                    </div>
+                    <div class="group"><label>Social QR / Key 📲</label>
+                        <div class="upload-zone">
+                            <span>Upload QR Code... 🔗</span>
+                            <input type="file" id="q_in" accept="image/*" onchange="prev(this, 'q_pr')">
+                            <img id="q_pr" class="preview-box">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-back" onclick="move(2)">Back</button>
+                        <button type="button" class="btn btn-next" onclick="move(4)">Almost There! 🍭</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step" id="s4">
+                    <div class="group"><label>Your Mini Bio 🍬</label><textarea id="bio" rows="4" placeholder="Say something dreamy..."></textarea></div>
+                    <div class="group"><label>MBTI Essence ✨</label>
+                        <select id="vibeType">
+                            <option>Protagonist (ENFJ) �</option>
+                            <option>Mediator (INFP) 🌿</option>
+                            <option>Commander (ENTJ) �️</option>
+                            <option>Entertainer (ESFP) 🎭</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-back" onclick="move(3)">Back</button>
+                        <button type="button" class="btn btn-next" onclick="finalize()">Ignite Magic 💍</button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="loading">
+                <div class="spinner"></div>
+                <h3 style="margin-top:20px; color:var(--kawaii-pink-dark)">Consulting Fate...</h3>
             </div>
-
-            <button class="btn-primary" onclick="submitMobileForm()">Find My Soulmate 💖</button>
-        </div>
-        
-        <!-- Loading State -->
-        <div class="step hidden" id="loadingStep" style="text-align: center; padding: 40px 0;">
-            <span class="loader"></span>
-            <h3 style="margin-top: 20px; color: #5d405c;">Connecting Stars...</h3>
         </div>
 
-        <!-- Success State -->
-        <div class="step hidden" id="successStep" style="text-align: center; padding: 20px 0;">
-            <div style="font-size: 4rem; margin-bottom: 10px;">💌</div>
-            <h2 style="color: #ff6b6b; margin-bottom: 10px;">It's a Match!</h2>
-            <p style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 20px;">We've sent the details to your email!</p>
-            <button class="btn-primary" onclick="location.reload()" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #5d405c; box-shadow: 0 10px 25px rgba(168, 237, 234, 0.4);">Check Again</button>
+        <!-- Result Section -->
+        <div id="revealSection">
+            <h2 style="text-align:center; color:white; margin-bottom:15px; text-shadow:0 3px 6px rgba(0,0,0,0.2)">Soulmate Forecast ✨</h2>
+            <div class="swipe-deck" id="deck"></div>
+            <div class="swipe-actions">
+                <button class="action-btn" style="background:#fee2e2; color:#ef4444" onclick="force('left')">✖️</button>
+                <button class="action-btn" style="background:#dcfce7; color:#22c55e" onclick="force('right')">❤️</button>
+            </div>
+        </div>
+
+        <!-- Celebration Section -->
+        <div class="kawaii-card" id="matchCelebration">
+            <h2 style="color:var(--kawaii-pink-dark)">Mega Match Found! 🎉</h2>
+            <img id="win_img" src="" class="soulmate-img">
+            <h3 id="win_name">Soulmate</h3>
+            <p style="opacity:0.7; margin:10px 0;">Compatibility: Over 99%! 💖</p>
+            <div class="qr-card">
+                <p style="font-weight:700; margin-bottom:10px;">Connect Instantly �</p>
+                <img id="win_qr" src="" style="width:100%; border-radius:15px;">
+            </div>
+            <button class="btn btn-next" style="width:100%" onclick="location.reload()">Reset Magic 🎀</button>
         </div>
     </div>
 
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112778.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        function selectGender(chip, value) {
-            document.querySelectorAll('#genderChips .chip').forEach(c => c.classList.remove('selected'));
-            chip.classList.add('selected');
-            document.getElementById('gender').value = value;
+        let currentStep = 1;
+        let matches = [];
+        let likedProfile = null;
+        let selectedTags = new Set();
+
+        function setTheme(theme, el) {
+            document.body.className = 'theme-' + theme;
+            document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+            el.classList.add('active');
+            updateAmb(theme);
         }
 
-        function selectInterest(chip, value) {
-            document.querySelectorAll('#interestChips .chip').forEach(c => c.classList.remove('selected'));
-            chip.classList.add('selected');
-            document.getElementById('interestedIn').value = value;
-        }
-
-        async function submitMobileForm() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const age = document.getElementById('age').value;
-            const gender = document.getElementById('gender').value;
-            const interestedIn = document.getElementById('interestedIn').value;
-
-            if(!name || !email || !age || !gender || !interestedIn) {
-                alert("Please fill in all fields! 🥺");
-                return;
+        function updateAmb(theme) {
+            const overlay = document.getElementById('ambientOverlay');
+            overlay.innerHTML = '';
+            const items = 20;
+            for(let i=0; i<items; i++) {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.innerText = theme === 'ocean' ? '🫧' : (theme === 'forest' ? '✨' : (theme === 'moonlight' ? '🌟' : '🌸'));
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                overlay.appendChild(p);
             }
+        }
+        updateAmb('default');
 
-            // UI Feedback
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('loadingStep').classList.remove('hidden');
+        function toggleMusic() {
+            const m = document.getElementById('bgMusic');
+            if(m.paused) { m.play(); document.getElementById('musTxt').innerText = "Playing"; }
+            else { m.pause(); document.getElementById('musTxt').innerText = "Paused"; }
+        }
 
-            // Construct FormData (Fixing the JSON issue)
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('email', email);
-            formData.append('age', age);
-            formData.append('gender', gender);
-            formData.append('interestedIn', interestedIn);
-            formData.append('bio', "Mobile User 📱");
-            formData.append('vibe', "Chill");
-            formData.append('theme', "Mobile");
-            formData.append('mbti', "Unknown");
+        function boopMascot() {
+            gsap.to(".mascot", { scale: 1.3, rotation: 10, duration: 0.3, yoyo: true, repeat: 1 });
+            alert("Mew! That tickles! ✨");
+        }
+
+        function sel(id, val, el) {
+            document.querySelectorAll(`#${id === 'gender' ? 'genCh' : 'intCh'} .chip`).forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(id === 'gender' ? 'gender' : 'intIn').value = val;
+        }
+
+        function tag(el, val) {
+            el.classList.toggle('active');
+            if(selectedTags.has(val)) selectedTags.delete(val);
+            else selectedTags.add(val);
+        }
+
+        function prev(input, id) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.getElementById(id);
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    input.previousElementSibling.innerText = "Selected! ✨";
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function move(n) {
+            if(n > currentStep) {
+                if(currentStep === 1 && (!document.getElementById('name').value || !document.getElementById('gender').value)) return alert("Missing info, cutie! 🥺");
+            }
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`s${n}`).classList.add('active');
+            currentStep = n;
+            document.getElementById('prog').style.width = (n/4 * 100) + '%';
+        }
+
+        async function finalize() {
+            const fd = new FormData();
+            fd.append('name', document.getElementById('name').value);
+            fd.append('email', document.getElementById('email').value);
+            fd.append('age', document.getElementById('age').value);
+            fd.append('gender', document.getElementById('gender').value);
+            fd.append('interestedIn', document.getElementById('intIn').value);
+            fd.append('lookingFor', document.getElementById('lookingFor').value);
+            fd.append('interests', JSON.stringify(Array.from(selectedTags)));
+            fd.append('bio', document.getElementById('bio').value || "A mysterious soul...");
+            fd.append('vibe', document.getElementById('vibeType').value);
+            
+            const p = document.getElementById('p_in').files[0];
+            const q = document.getElementById('q_in').files[0];
+            if(!p || !q) return alert("We need your photo & QR! 📸📲");
+            fd.append('photo', p);
+            fd.append('socialQr', q);
+
+            document.getElementById('regForm').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('subTxt').innerText = "Consulting the universe... 🌌";
 
             try {
-                // Sending as multipart/form-data implicitly by standard fetch with FormData body
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    body: formData // No Content-Type header needed, browser sets it with boundary
-                });
-
-                const data = await response.json();
-
+                const res = await fetch('/api/register', { method: 'POST', body: fd });
+                const data = await res.json();
                 if(data.success) {
+                    const mRes = await fetch(`/api/matches?userId=${data.user.id}`);
+                    const mData = await mRes.json();
+                    matches = mData.matches || [];
+                    
                     setTimeout(() => {
-                        document.getElementById('loadingStep').classList.add('hidden');
-                        document.getElementById('successStep').classList.remove('hidden');
-                    }, 1000);
+                        document.getElementById('regCard').style.display = 'none';
+                        document.getElementById('revealSection').style.display = 'block';
+                        render();
+                    }, 1500);
                 } else {
-                    alert(data.message || data.error || "Something went wrong.");
+                    alert(data.error || "Magic failed. Try again!");
                     location.reload();
                 }
-            } catch (e) {
-                console.error(e);
-                alert("Connection failed! Please try again.");
-                location.reload();
-            }
+            } catch (e) { alert("Connectivity void encountered! 🛡️"); location.reload(); }
+        }
+
+        function render() {
+            const deck = document.getElementById('deck');
+            deck.innerHTML = '';
+            matches.forEach((u, i) => {
+                const c = document.createElement('div');
+                c.className = 'card';
+                c.style.zIndex = matches.length - i;
+                c.innerHTML = `
+                    <div class="card-match">${u.matchScore || 90}%</div>
+                    <img src="${u.img}" class="card-img" onerror="this.src='/assets/mascot.png'">
+                    <div class="card-body">
+                        <div class="card-name">${u.name}, ${u.age}</div>
+                        <p style="font-size:0.85rem; opacity:0.8; margin-top:5px;">${u.bio}</p>
+                        <div style="margin-top:10px; opacity:0.6; font-size:0.75rem;">🌟 ${u.vibe || 'Soul Connection'}</div>
+                    </div>
+                `;
+                deck.appendChild(c);
+            });
+        }
+
+        function force(dir) {
+            const cs = document.querySelectorAll('.card');
+            if(cs.length === 0) return;
+            const top = cs[0];
+            gsap.to(top, {
+                x: dir === 'right' ? 600 : -600,
+                opacity: 0,
+                rotation: dir === 'right' ? 30 : -30,
+                duration: 0.6,
+                onComplete: () => {
+                    top.remove();
+                    if(dir === 'right') celebrate(matches[matches.length - cs.length]);
+                    else if(document.querySelectorAll('.card').length === 0) { alert("No more matches today! �"); location.reload(); }
+                }
+            });
+        }
+
+        function celebrate(m) {
+            document.getElementById('revealSection').style.display = 'none';
+            document.getElementById('matchCelebration').style.display = 'block';
+            document.getElementById('win_img').src = m.img;
+            document.getElementById('win_name').innerText = m.name;
+            document.getElementById('win_qr').src = m.socialQr || m.img;
+            confetti({
+                particleCount: 100, spread: 70, origin: { y: 0.6 },
+                colors: ['#ffc2d1', '#ff85a1', '#e0c3fc']
+            });
         }
     </script>
 </body>
