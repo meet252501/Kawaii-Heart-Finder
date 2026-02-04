@@ -1583,74 +1583,53 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
-                align-items: flex-start; /* Parse content better */
+            body { 
+                padding: 10px; 
+                align-items: flex-start;
+                overflow-x: hidden;
             }
 
-            h1 {
-                font-size: 1.8rem;
+            h1 { font-size: 1.8rem; }
+            
+            .enter-overlay h1 { 
+                font-size: 2.2rem !important; 
+                margin-top: -20px;
+                line-height: 1.2;
             }
             
-            .enter-overlay h1 {
-                font-size: 2.8rem !important;
-                margin-top: -50px;
-            }
-            
-            .enter-btn {
-                padding: 15px 40px;
-                font-size: 1.2rem;
-                width: 90%;
+            .enter-btn { 
+                padding: 15px 30px; 
+                font-size: 1rem; 
+                width: 100%; 
+                margin-top: 10px;
             }
             
             .kawaii-box {
-                margin-top: 60px; /* Space for mood switcher */
-                padding: 20px 15px;
+                margin-top: 70px; 
+                padding: 20px 15px; 
+                width: 95%;
             }
 
-            /* Better form elements for touch */
-            input, select, textarea {
-                font-size: 16px !important; /* Prevents iOS zoom */
-                padding: 14px 15px;
-            }
+            input, select, textarea { font-size: 16px !important; padding: 12px 15px; }
+            .group { margin-bottom: 20px; }
             
-            .group {
-                margin-bottom: 20px;
-            }
-
-            /* Stack chips on mobile */
-            .chips {
-                gap: 5px;
-            }
+            .chips { gap: 6px; }
+            .chip { padding: 6px 12px; font-size: 0.8rem; flex: 1 1 auto; text-align: center; }
             
-            .chip {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-                flex: 1 1 auto;
-                text-align: center;
-            }
+            .floating-vibe { opacity: 0.3; transform: scale(0.5); }
             
-            /* Clean up UI clutter */
-            .floating-vibe { opacity: 0.5; transform: scale(0.6); }
-            .blob { opacity: 0.4; }
-            
-            /* Reposition Controls */
             #moodSwitcher {
-                left: 50%;
-                transform: translateX(-50%);
-                top: 15px;
-                width: auto;
-                justify-content: center;
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255,255,255,0.6);
+                top: 10px; left: 50%; transform: translateX(-50%);
+                padding: 5px; width: max-content;
             }
 
             #audioControls {
-                top: auto;
-                bottom: 20px;
-                right: 20px;
-                transform: scale(0.9);
+                bottom: 15px; right: 15px; top: auto;
+                transform: scale(0.85); transform-origin: bottom right;
             }
+
+            .mascot-container img { width: 140px; }
+            .logo-area img { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -1940,51 +1919,15 @@
         </div>
     </div>
 
-    <!-- Mobile Warning Overlay -->
-    <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.98); z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; pointer-events: auto;">
-        <img src="assets/mascot.png" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; position: relative; z-index: 2;">
-        <h2 style="color: #ff1a7d; margin-bottom: 15px; position: relative; z-index: 2; text-shadow: 0 2px 0 white;">💖 Oh no, cutie! 💖</h2>
-        <p style="font-size: 1.1rem; color: #333; margin-bottom: 20px; font-weight: 600; padding: 0 20px; position: relative; z-index: 2;">
-            This magic world is designed for <b>Desktop/Laptop</b>! ✨<br><br>
-            Please <b>Switch to Desktop</b> for the full experience, or continue in Lite Mode (some effects disabled).
-        </p>
-        <div role="button" onclick="enableLiteMode()" ontouchstart="enableLiteMode()" style="background: #ff1a7d; color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(255, 26, 125, 0.3); font-weight: bold; width: max-content; max-width: 90%; text-align: center; position: relative; z-index: 2147483647; user-select: none;">Continue on Mobile 📱</div>
-    </div>
+
 
     <script>
         // --- 10/10 PRO DEPLOYMENT CONFIG ---
         // Change this to your Glitch/Production URL when deploying!
         
         // --- MOBILE & PERFORMANCE LOGIC ---
-        let isLiteMode = false;
+        // Warning Removed - Native Responsive Design Implemented! 📱✨
 
-        function checkMobile() {
-            if (window.innerWidth <= 768) {
-                // Show Warning
-                document.getElementById('mobileWarning').style.display = 'flex';
-                // Hide entry buttons until user decides
-                const entryButtons = document.getElementById('entryButtons');
-                if (entryButtons) entryButtons.style.display = 'none';
-            }
-        }
-
-        function enableLiteMode() {
-            isLiteMode = true;
-            document.getElementById('mobileWarning').style.display = 'none';
-            const entryButtons = document.getElementById('entryButtons');
-            if (entryButtons) entryButtons.style.display = 'flex'; // Show buttons
-            
-            // Disable heavy effects
-            const bgBlobs = document.querySelector('.bg-blobs');
-            if (bgBlobs) bgBlobs.style.display = 'none';
-            const gooeyFilter = document.querySelector('.gooey-filter');
-            if (gooeyFilter) gooeyFilter.style.display = 'none';
-            const sparkleCanvas = document.getElementById('sparkleCanvas');
-            if (sparkleCanvas) sparkleCanvas.style.display = 'none'; // Stop particles
-        }
-
-        // Run check on load
-        window.onload = checkMobile;
 
 
         function setTheme(theme, btn) {
