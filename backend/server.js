@@ -118,6 +118,17 @@ const sanitizeInput = (str) => {
   return str.replace(/<[^>]*>/g, "").trim();
 };
 const calculateMatchScore = (u1, u2) => {
+  // 0. Gender Preference Filter (Hard Block)
+  const u1Pref = u1.interestedIn || "Everyone";
+  const u2Pref = u2.interestedIn || "Everyone";
+  const u1Gen = u1.gender || "Secret";
+  const u2Gen = u2.gender || "Secret";
+
+  // Check U1's preference
+  if (u1Pref !== "Everyone" && u1Pref !== u2Gen) return 0;
+  // Check U2's preference (Mutual Interest)
+  if (u2Pref !== "Everyone" && u2Pref !== u1Gen) return 0;
+
   let score = 50; // Starting baseline
 
   // 1. Shared Interests (+15 each)
@@ -217,6 +228,7 @@ app.post(
         age: safeAge,
         bio: sanitizeInput(req.body.bio) || "A mysterious cutie...",
         gender: sanitizeInput(req.body.gender) || "Secret",
+        interestedIn: sanitizeInput(req.body.interestedIn) || "Everyone",
         lookingFor: sanitizeInput(req.body.lookingFor) || "Connection",
         interests: req.body.interests ? JSON.parse(req.body.interests) : [],
         img: req.files["photo"]
