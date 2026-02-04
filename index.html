@@ -1560,6 +1560,98 @@
             color: var(--kawaii-pink-dark);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .kawaii-box {
+                width: 95%;
+                padding: 25px 20px;
+            }
+            
+            .enter-overlay h1 {
+                font-size: 3.5rem !important;
+                line-height: 1.2;
+            }
+            
+            .logo-area {
+                font-size: 2.5rem;
+            }
+
+            .mascot-container img {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start; /* Parse content better */
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .enter-overlay h1 {
+                font-size: 2.8rem !important;
+                margin-top: -50px;
+            }
+            
+            .enter-btn {
+                padding: 15px 40px;
+                font-size: 1.2rem;
+                width: 90%;
+            }
+            
+            .kawaii-box {
+                margin-top: 60px; /* Space for mood switcher */
+                padding: 20px 15px;
+            }
+
+            /* Better form elements for touch */
+            input, select, textarea {
+                font-size: 16px !important; /* Prevents iOS zoom */
+                padding: 14px 15px;
+            }
+            
+            .group {
+                margin-bottom: 20px;
+            }
+
+            /* Stack chips on mobile */
+            .chips {
+                gap: 5px;
+            }
+            
+            .chip {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                flex: 1 1 auto;
+                text-align: center;
+            }
+            
+            /* Clean up UI clutter */
+            .floating-vibe { opacity: 0.5; transform: scale(0.6); }
+            .blob { opacity: 0.4; }
+            
+            /* Reposition Controls */
+            #moodSwitcher {
+                left: 50%;
+                transform: translateX(-50%);
+                top: 15px;
+                width: auto;
+                justify-content: center;
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255,255,255,0.6);
+            }
+
+            #audioControls {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                transform: scale(0.9);
+            }
+        }
     </style>
 </head>
 
@@ -1577,7 +1669,7 @@
         <div class="ribbon-float" style="top: 40%; left: 90%; animation-delay: 4s;"></div>
         
         <div class="mascot-container">
-            <img src="C:/Users/Meet Sutariya/.gemini/antigravity/brain/a7b6e9a5-77c2-4454-81db-861d7b99a034/kawaii_mascot_new_1770045132737.png">
+            <img src="assets/mascot.png">
         </div>
         <h1>Kawaii Heart Finder</h1>
         
@@ -1667,7 +1759,7 @@
         </div>
 
         <div class="kawaii-loader" id="loader">
-            <img src="C:/Users/Meet Sutariya/.gemini/antigravity/brain/a7b6e9a5-77c2-4454-81db-861d7b99a034/kawaii_mascot_new_1770045132737.png" 
+            <img src="assets/mascot.png" 
                  style="width: 120px; border-radius: 50%; box-shadow: 0 0 20px rgba(255,194,209,0.5); animation: bounce 0.6s infinite alternate;">
             <p style="margin-top: 20px; font-weight:700;">Finding Your Perfect Choice...</p>
         </div>
@@ -1684,7 +1776,7 @@
         <div id="formContainer">
             <header>
                 <div class="logo-area" id="mainMascot" onclick="mascotBoop()">
-                    <img src="C:/Users/Meet Sutariya/.gemini/antigravity/brain/a7b6e9a5-77c2-4454-81db-861d7b99a034/kawaii_mascot_new_1770045132737.png" 
+                    <img src="assets/mascot.png" 
                          style="width: 60px; height: 60px; border-radius: 50%;">
                 </div>
                 <h1>Kawaii Heart Finder</h1>
@@ -1762,7 +1854,7 @@
 
                         <div class="group" style="text-align: center;">
                             <label>Secure Premium Match? (Optional) 💎</label>
-                            <img src="C:/Users/Meet Sutariya/.gemini/antigravity/brain/a7b6e9a5-77c2-4454-81db-861d7b99a034/uploaded_media_1770047427759.jpg"
+                            <img src="assets/premium_qr.jpg"
                                 style="border-radius: 20px; border: 5px solid var(--kawaii-pink); width: 220px;">
                             <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">Scan to unlock 2x match
                                 accuracy!</p>
