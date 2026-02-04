@@ -16,23 +16,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Security Middleware (Relaxed for Inline Scripts)
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        "default-src": ["'self'"],
-        "script-src": [
-          "'self'",
-          "'unsafe-inline'", // Allow inline scripts
-          "https://cdnjs.cloudflare.com", // Allow GSAP
-          "https://cdn.jsdelivr.net", // Allow Confetti
-        ],
-        "img-src": ["'self'", "data:", "blob:"], // Allow data URIs for images
-      },
-    },
-  }),
-);
+// Security Middleware
+// app.use(helmet()); <-- DISABLED TO FIX "ENTER BUTTON" BUG
+app.use(cors());
+app.use(express.json());
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
