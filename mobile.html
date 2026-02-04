@@ -168,7 +168,7 @@
         .kawaii-toast {
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: var(--kawaii-pink-dark); color: white; padding: 12px 25px; border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(255,133,161,0.4); z-index: 30000; font-weight: 700;
+            box-shadow: 0 10px 30px rgba(255,133,161,0.4); z-index: 999999; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(10px);
             border: 2px solid rgba(255,255,255,0.3); pointer-events: none; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
@@ -199,12 +199,12 @@
             <header>
                 <img src="assets/mascot.png" class="mascot" alt="Mascot" onclick="boopMascot()">
                 <h1>Kawaii Match Pro</h1>
-                <p id="subTxt" style="opacity:0.8; font-size:0.9rem;">The Ultimate Soulmate Engine ✨</p>
+                <p id="subTxt" style="opacity:0.8; font-size:0.9rem;">Let the Universe find your Vibe ✨</p>
             </header>
 
             <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
 
-            <form id="regForm">
+            <form id="regForm" novalidate onsubmit="return false;">
                 <!-- Step 1 -->
                 <div class="step active" id="s1">
                     <div class="group"><label>Soul Name 🌸</label><input type="text" id="name" placeholder="E.g. Yuki-Chan"></div>
@@ -359,6 +359,15 @@
         let likedProfile = null;
         let selectedTags = new Set();
 
+        // 100% CUSTOM NOTIFICATIONS: Global Error Catcher
+        window.onerror = function(msg) {
+            showToast("Magic Hiccup: " + msg, "🔮");
+            return true;
+        };
+        window.onunhandledrejection = function(event) {
+            showToast("Dimension Drift: " + event.reason, "🌀");
+        };
+
         function showToast(msg, icon = "🎀") {
             let t = document.getElementById('toast');
             if(!t) {
@@ -487,6 +496,10 @@
         function move(n) {
             if(n > currentStep) {
                 if(currentStep === 1 && (!document.getElementById('name').value || !document.getElementById('gender').value)) return showToast("Missing info, cutie! 🥺", "🌸");
+                if(currentStep === 3) {
+                    if(!document.getElementById('p_in').files[0] || !document.getElementById('q_in').files[0]) 
+                        return showToast("Wait! We need your photo & QR! 📸📲", "✨");
+                }
             }
             const outDir = n > currentStep ? -50 : 50;
             const inDir = n > currentStep ? 50 : -50;
