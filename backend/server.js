@@ -51,8 +51,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/uploads", express.static("uploads"));
-app.use(express.static(path.join(__dirname, "../"))); // Serve frontend files
+app.use("/uploads", express.static("uploads"));// --- INTELLIGENT ROUTING SYSTEM 🧠 ---
+app.get("/", (req, res) => {
+  const userAgent = req.headers["user-agent"] || "";
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
+  if (isMobile) {
+    console.log(`📱 Mobile User Detected! Serving Lite Version.`);
+    res.sendFile(path.join(__dirname, "../mobile.html"));
+  } else {
+    console.log(`💻 Desktop User Detected. Serving Full Experience.`);
+    res.sendFile(path.join(__dirname, "../index.html"));
+  }
+}); // Serve frontend files
 
 // --- STORAGE CONFIGURATION ---
 const storage = multer.diskStorage({

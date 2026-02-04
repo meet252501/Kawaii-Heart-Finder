@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kawaii Heart Seeker | Mobile</title>
+    <!-- Kawaii Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kawaii-pink: #ffc2d1;
+            --kawaii-pink-dark: #ff85a1;
+            --kawaii-text: #4a3050;
+            --kawaii-white: #ffffff;
+            --bg-main: #fff5f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fredoka', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0px 15px 40px 15px; /* Added padding at bottom */
+            color: var(--kawaii-text);
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background (CSS Only - No JS) */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: radial-gradient(var(--kawaii-pink) 2px, transparent 2px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+
+        /* Mobile Header */
+        header {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .mascot-img {
+            width: 120px;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--kawaii-pink-dark);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Simplified Card */
+        .kawaii-box {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.15);
+            border: 2px solid var(--kawaii-white);
+        }
+
+        /* Form Elements - Touch Optimized */
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--kawaii-pink-dark);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 15px; /* Large touch target */
+            background: var(--kawaii-white);
+            border: 2px solid var(--kawaii-pink);
+            border-radius: 20px;
+            font-size: 16px; /* Prevents iOS zoom */
+            color: var(--kawaii-text);
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--kawaii-pink-dark);
+            box-shadow: 0 5px 15px rgba(255, 133, 161, 0.2);
+        }
+
+        /* Chip Selection */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            padding: 10px 15px;
+            background: #fff;
+            border: 2px solid var(--kawaii-pink);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            flex: 1 1 auto;
+            text-align: center;
+        }
+
+        .chip.selected {
+            background: var(--kawaii-pink-dark);
+            color: white;
+            border-color: var(--kawaii-pink-dark);
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: var(--kawaii-pink-dark);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+            margin-top: 10px;
+            cursor: pointer;
+            -webkit-appearance: none; /* iOS reset */
+            appearance: none;
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Utility */
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <img src="assets/mascot.png" class="mascot-img" alt="Mascot">
+        <h1>Kawaii Heart Finder</h1>
+        <div class="subtitle">Mobile Lite Edition ✨</div>
+    </header>
+
+    <div class="kawaii-box fade-in" id="mobileForm">
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+            <div class="group">
+                <label>What's your name? 🌸</label>
+                <input type="text" id="name" placeholder="Super Cute Name">
+            </div>
+            <div class="group">
+                <label>Your Email? 💌</label>
+                <input type="email" id="email" placeholder="you@love.com">
+            </div>
+            <div class="group">
+                <label>Your Age? 🎂</label>
+                <input type="number" id="age" placeholder="18+">
+            </div>
+             <div class="group">
+                <label>I am a... ⚧️</label>
+                <div class="chips" id="genderChips">
+                    <div class="chip" onclick="selectGender(this, 'Male')">Boy 💙</div>
+                    <div class="chip" onclick="selectGender(this, 'Female')">Girl 💖</div>
+                    <div class="chip" onclick="selectGender(this, 'Non-binary')">Enby 💜</div>
+                </div>
+                <input type="hidden" id="gender">
+            </div>
+
+            <div class="group">
+                <label>Looking for... 🔭</label>
+                <div class="chips" id="interestChips">
+                    <div class="chip" onclick="selectInterest(this, 'Female')">Girls 👩</div>
+                    <div class="chip" onclick="selectInterest(this, 'Male')">Boys 👨</div>
+                    <div class="chip" onclick="selectInterest(this, 'Both')">Both 🌈</div>
+                </div>
+                <input type="hidden" id="interestedIn">
+            </div>
+
+            <button class="btn-primary" onclick="submitMobileForm()">Find My Match! 💖</button>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="step hidden" id="loadingStep" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🔮</div>
+            <h3>Scanning the Stars...</h3>
+            <p>Finding your perfect anime soulmate!</p>
+        </div>
+
+        <!-- Success State -->
+        <div class="step hidden" id="successStep" style="text-align: center;">
+            <h2 style="color: var(--kawaii-pink-dark);">Success! 💌</h2>
+            <p>We found a match! Check your email to see who it is!</p>
+            <button class="btn-primary" onclick="location.reload()" style="background: var(--kawaii-mint); margin-top: 20px;">Again!</button>
+        </div>
+    </div>
+
+    <script>
+        // Simple Vanilla JS for Mobile Logic
+        
+        function selectGender(chip, value) {
+            // Reset
+            document.querySelectorAll('#genderChips .chip').forEach(c => c.classList.remove('selected'));
+            // Set
+            chip.classList.add('selected');
+            document.getElementById('gender').value = value;
+        }
+
+        function selectInterest(chip, value) {
+            document.querySelectorAll('#interestChips .chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            document.getElementById('interestedIn').value = value;
+        }
+
+        async function submitMobileForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const interestedIn = document.getElementById('interestedIn').value;
+
+            if(!name || !email || !age || !gender || !interestedIn) {
+                alert("Please fill in all the cute details! 🥺");
+                return;
+            }
+
+            // Show Loading
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('loadingStep').classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, age, gender, interestedIn,
+                        bio: "Mobile User 📱",
+                        vibe: "Chill",
+                        theme: "Default",
+                        mbti: "Unknown"
+                    })
+                });
+
+                const data = await response.json();
+
+                if(data.success) {
+                    setTimeout(() => {
+                        document.getElementById('loadingStep').classList.add('hidden');
+                        document.getElementById('successStep').classList.remove('hidden');
+                    }, 1500); // Fake delay for magic feel
+                } else {
+                    alert(data.message || "Oops! Something went wrong.");
+                    location.reload();
+                }
+            } catch (e) {
+                alert("Server error! Check your connection.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
