@@ -101,9 +101,18 @@
         /* Buttons */
         .btn-group { display: flex; gap: 10px; margin-top: 30px; }
         .btn { flex: 1; padding: 18px; border-radius: 50px; font-weight: 700; border: none; font-size: 1.1rem; transition: 0.2s; }
-        .btn-next { background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%); color: white; box-shadow: 0 8px 20px rgba(255,107,107,0.3); }
+        .btn-next { 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%); 
+            color: white; 
+            box-shadow: 0 8px 20px rgba(255,107,107,0.3); animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 20px rgba(255,107,107,0.3); }
+            50% { transform: scale(1.02); box-shadow: 0 12px 25px rgba(255,107,107,0.5); }
+            100% { transform: scale(1); box-shadow: 0 8px 20px rgba(255,107,107,0.3); }
+        }
         .btn-back { background: rgba(0,0,0,0.05); color: var(--kawaii-text); }
-        .btn:active { transform: scale(0.95); }
+        .btn:active { transform: scale(0.95); transition: 0.1s; }
 
         /* Swipe Results */
         #revealSection { display: none; }
@@ -131,6 +140,19 @@
         .spinner { width: 50px; height: 50px; border: 5px solid var(--kawaii-pink); border-top-color: var(--kawaii-pink-dark); border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Mascot Particles */
+        .mascot-particle { position: fixed; pointer-events: none; z-index: 9999; font-size: 24px; animation: particleFly 1s ease-out forwards; }
+        @keyframes particleFly {
+            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            100% { transform: scale(0) translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+
+        /* Desktop Tip */
+        .desktop-tip { 
+            margin-top: 30px; padding: 15px; background: rgba(255,255,255,0.4); 
+            border-radius: 20px; text-align: center; border: 1px dashed var(--kawaii-pink-dark);
+            font-size: 0.85rem; color: var(--kawaii-pink-dark); font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -286,6 +308,11 @@
             </div>
             <button class="btn btn-next" style="width:100%" onclick="location.reload()">Reset Magic 🎀</button>
         </div>
+
+        <!-- Desktop Tip -->
+        <div class="desktop-tip">
+            ✨ Pro Tip: Switch to Desktop for the mega-wide immersion & high-fps stardust! 🖥️
+        </div>
     </div>
 
     <audio id="bgMusic" loop>
@@ -368,12 +395,26 @@
 
         function boopMascot() {
             gsap.to(".mascot", { scale: 1.3, rotation: 10, duration: 0.3, yoyo: true, repeat: 1 });
-            alert("Mew! That tickles! ✨");
+            
+            // Create particles
+            for(let i=0; i<8; i++) {
+                const p = document.createElement('div');
+                p.className = 'mascot-particle';
+                p.innerText = ['💖','✨','⭐','🍬','🍭'][Math.floor(Math.random()*5)];
+                const rect = document.querySelector('.mascot').getBoundingClientRect();
+                p.style.left = (rect.left + rect.width/2) + 'px';
+                p.style.top = (rect.top + rect.height/2) + 'px';
+                p.style.setProperty('--tx', (Math.random()*200 - 100) + 'px');
+                p.style.setProperty('--ty', (Math.random()*200 - 100) + 'px');
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1000);
+            }
         }
 
         function sel(id, val, el) {
             document.querySelectorAll(`#${id === 'gender' ? 'genCh' : 'intCh'} .chip`).forEach(c => c.classList.remove('active'));
             el.classList.add('active');
+            gsap.from(el, { scale: 0.8, duration: 0.3, ease: "back.out(2)" });
             document.getElementById(id === 'gender' ? 'gender' : 'intIn').value = val;
         }
 
@@ -400,10 +441,17 @@
             if(n > currentStep) {
                 if(currentStep === 1 && (!document.getElementById('name').value || !document.getElementById('gender').value)) return alert("Missing info, cutie! 🥺");
             }
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById(`s${n}`).classList.add('active');
-            currentStep = n;
-            document.getElementById('prog').style.width = (n/4 * 100) + '%';
+            const outDir = n > currentStep ? -50 : 50;
+            const inDir = n > currentStep ? 50 : -50;
+
+            gsap.to(`#s${currentStep}`, { opacity: 0, x: outDir, duration: 0.3, onComplete: () => {
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                const next = document.getElementById(`s${n}`);
+                next.classList.add('active');
+                gsap.fromTo(next, { opacity: 0, x: inDir }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" });
+                currentStep = n;
+                document.getElementById('prog').style.width = (n/4 * 100) + '%';
+            }});
         }
 
         async function finalize() {
