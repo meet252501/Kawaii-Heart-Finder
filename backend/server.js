@@ -63,7 +63,11 @@ app.get("/", (req, res) => {
     console.log(`💻 Desktop User Detected. Serving Full Experience.`);
     res.sendFile(path.join(__dirname, "../index.html"));
   }
-}); // Serve frontend files
+});
+
+// --- STATIC FILES ---
+// Serve frontend files (css, assets, etc.)
+app.use(express.static(path.join(__dirname, "../")));
 
 // --- STORAGE CONFIGURATION ---
 const storage = multer.diskStorage({
