@@ -2227,6 +2227,52 @@
             }
         }
 
+        function createPetals() {
+            const container = document.getElementById('ambientOverlay');
+            if(!container) return;
+            for(let i=0; i<30; i++) {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.innerText = ['🌸','✨','💖','☁️'][Math.floor(Math.random()*4)];
+                p.style.position = 'absolute';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = '-50px';
+                p.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                p.style.opacity = Math.random();
+                container.appendChild(p);
+                
+                gsap.to(p, {
+                    y: '110vh',
+                    x: (Math.random() * 200 - 100) + 'px',
+                    rotation: Math.random() * 360,
+                    duration: Math.random() * 5 + 5,
+                    ease: "none",
+                    onComplete: () => p.remove()
+                });
+            }
+        }
+
+        function createTrail(x, y) {
+            const t = document.createElement('div');
+            t.className = 'cursor-trail';
+            t.style.position = 'fixed';
+            t.style.pointerEvents = 'none';
+            t.style.zIndex = '9999';
+            t.innerText = ["✨", "💖", "🌸", "🍭"][Math.floor(Math.random() * 4)];
+            t.style.left = x + 'px';
+            t.style.top = y + 'px';
+            document.body.appendChild(t);
+            
+            gsap.to(t, {
+                y: y + (Math.random() * 100 - 50),
+                x: x + (Math.random() * 100 - 50),
+                opacity: 0,
+                scale: 0,
+                duration: 1,
+                onComplete: () => t.remove()
+            });
+        }
+
 
 
         let step = 1;
