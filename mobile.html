@@ -153,11 +153,26 @@
             border-radius: 20px; text-align: center; border: 1px dashed var(--kawaii-pink-dark);
             font-size: 0.85rem; color: var(--kawaii-pink-dark); font-weight: 600;
         }
+
+        /* Grand Reveal Overlay */
+        #grandRevealOverlay {
+            position: fixed; inset: 0; background: white; z-index: 20000;
+            display: none; justify-content: center; align-items: center;
+            flex-direction: column; opacity: 0;
+        }
+        .reveal-vortex {
+            width: 200vw; height: 200vw; background: radial-gradient(circle, var(--kawaii-pink) 0%, transparent 70%);
+            position: absolute; animation: spin 4s linear infinite; opacity: 0.3;
+        }
     </style>
 </head>
 <body>
 
     <div id="ambientOverlay"></div>
+    <div id="grandRevealOverlay">
+        <div class="reveal-vortex"></div>
+        <h1 style="color:var(--kawaii-pink-dark); z-index: 2; font-size: 2.5rem; text-shadow: 0 0 20px white;">Universe Aligned... ✨</h1>
+    </div>
 
     <div class="top-nav">
         <div class="theme-box">
@@ -485,12 +500,28 @@
                     const mData = await mRes.json();
                     matches = mData.matches || [];
                     
-                    setTimeout(() => {
+                    // GRAND REVEAL START
+                    const overlay = document.getElementById('grandRevealOverlay');
+                    overlay.style.display = 'flex';
+                    
+                    gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
                         document.getElementById('regCard').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('revealSection').style.display = 'block';
                         render();
-                    }, 1500);
+                        
+                        gsap.fromTo("#revealSection", { scale: 0, rotation: -10 }, { scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.7)" });
+                        
+                        // Explosion of confetti
+                        confetti({
+                            particleCount: 150, spread: 80, origin: { y: 0.6 },
+                            colors: ['#ffc2d1', '#ff85a1', '#e0c3fc', '#ffffff']
+                        });
+
+                        setTimeout(() => {
+                            gsap.to(overlay, { opacity: 0, duration: 1, onComplete: () => overlay.style.display = 'none' });
+                        }, 500);
+                    }});
                 } else {
                     alert(data.error || "Magic failed. Try again!");
                     location.reload();
