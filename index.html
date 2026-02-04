@@ -1924,9 +1924,48 @@
     <script>
         // --- 10/10 PRO DEPLOYMENT CONFIG ---
         // Change this to your Glitch/Production URL when deploying!
-        
+        const API_BASE = "/api";
+        let currentUser = null;
+
         // --- MOBILE & PERFORMANCE LOGIC ---
         // Warning Removed - Native Responsive Design Implemented! 📱✨
+
+        window.onload = () => {
+             const savedEmail = localStorage.getItem('kawaii_user_email');
+             if (savedEmail) {
+                fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: savedEmail })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        console.log("Welcome back:", data.user.name);
+                        currentUser = data.user;
+                        loadMatches(currentUser.id);
+                    }
+                })
+                .catch(err => console.log("Silent login failed"));
+             }
+        };
+
+        function loadMatches(userId) {
+            document.getElementById('kawaiiForm').style.display = 'none';
+            document.getElementById('loader').classList.add('active');
+            
+            fetch(`${API_BASE}/matches?userId=${userId}`)
+            .then(res => res.json())
+            .then(matchData => {
+                document.getElementById('loader').classList.remove('active');
+                document.getElementById('revealScreen').style.display = 'block';
+                renderDeck(matchData.matches || []);
+            })
+            .catch(err => {
+                document.getElementById('loader').classList.remove('active');
+                document.getElementById('kawaiiForm').style.display = 'block';
+            });
+        }
 
 
 
@@ -2194,7 +2233,6 @@
         const total = 4;
         let userAvatarData = "";
         let userSocialData = "";
-        let currentUser = null; // Store user from server
         let selectedInterests = new Set();
         let chatInterval = null;
 
@@ -2592,6 +2630,7 @@
             .then(data => {
                 if(data.success) {
                     currentUser = data.user;
+                    localStorage.setItem('kawaii_user_email', currentUser.email);
                     console.log("✨ Data sent to server!");
                     // Now ask for matches with our ID
                     return fetch(`${API_BASE}/matches?userId=${currentUser.id}`);

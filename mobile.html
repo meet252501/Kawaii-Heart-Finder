@@ -263,7 +263,10 @@
 
         <!-- Result Section -->
         <div id="revealSection">
-            <h2 style="text-align:center; color:white; margin-bottom:15px; text-shadow:0 3px 6px rgba(0,0,0,0.2)">Soulmate Forecast ✨</h2>
+            <h2 style="text-align:center; color:white; margin-bottom:15px; text-shadow:0 3px 6px rgba(0,0,0,0.2)">
+                Soulmate Forecast ✨
+                <button onclick="location.reload()" style="background:rgba(255,255,255,0.2); border:none; border-radius:50%; width:30px; height:30px; font-size:12px; vertical-align:middle; margin-left:10px; cursor:pointer;">🔄</button>
+            </h2>
             <div class="swipe-deck" id="deck"></div>
             <div class="swipe-actions">
                 <button class="action-btn" style="background:#fee2e2; color:#ef4444" onclick="force('left')">✖️</button>
@@ -318,6 +321,44 @@
             }
         }
         updateAmb('default');
+        checkAutoLogin();
+
+        async function checkAutoLogin() {
+            const savedEmail = localStorage.getItem('kawaii_user_email');
+            if (savedEmail) {
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: savedEmail })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        console.log("Welcome back:", data.user.name);
+                        loadMatches(data.user.id);
+                    }
+                } catch (e) { console.log("Silent login failed"); }
+            }
+        }
+
+        async function loadMatches(userId) {
+            document.getElementById('regCard').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('subTxt').innerText = "Refreshing connections... ✨";
+            
+            try {
+                const mRes = await fetch(`/api/matches?userId=${userId}`);
+                const mData = await mRes.json();
+                matches = mData.matches || [];
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('revealSection').style.display = 'block';
+                render();
+            } catch (e) {
+                alert("Could not load matches! 🛡️");
+                document.getElementById('regCard').style.display = 'block';
+            }
+        }
 
         function toggleMusic() {
             const m = document.getElementById('bgMusic');
@@ -391,12 +432,14 @@
                 const res = await fetch('/api/register', { method: 'POST', body: fd });
                 const data = await res.json();
                 if(data.success) {
+                    localStorage.setItem('kawaii_user_email', data.user.email);
                     const mRes = await fetch(`/api/matches?userId=${data.user.id}`);
                     const mData = await mRes.json();
                     matches = mData.matches || [];
                     
                     setTimeout(() => {
                         document.getElementById('regCard').style.display = 'none';
+                        document.getElementById('loading').style.display = 'none';
                         document.getElementById('revealSection').style.display = 'block';
                         render();
                     }, 1500);
