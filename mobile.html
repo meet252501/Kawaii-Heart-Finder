@@ -188,14 +188,14 @@
                     <div class="group"><label>Connection Goal 💍</label>
                         <select id="lookingFor">
                             <option>Long-term Love 💍</option>
-                            <option>Bestie for Life �</option>
+                            <option>Bestie for Life 🍦</option>
                             <option>Casual Cuteness ☁️</option>
                         </select>
                     </div>
                     <div class="group"><label>Interests 🎨</label>
                         <div class="chips" id="vibeCh">
-                            <div class="chip" onclick="tag(this, 'Gaming')">Gaming �</div>
-                            <div class="chip" onclick="tag(this, 'Anime')">Anime �</div>
+                            <div class="chip" onclick="tag(this, 'Gaming')">Gaming 🎮</div>
+                            <div class="chip" onclick="tag(this, 'Anime')">Anime 🍥</div>
                             <div class="chip" onclick="tag(this, 'Music')">Music 🎵</div>
                             <div class="chip" onclick="tag(this, 'Art')">Art 🎨</div>
                             <div class="chip" onclick="tag(this, 'Travel')">Travel ✈️</div>
@@ -234,12 +234,20 @@
                     <div class="group"><label>Your Mini Bio 🍬</label><textarea id="bio" rows="4" placeholder="Say something dreamy..."></textarea></div>
                     <div class="group"><label>MBTI Essence ✨</label>
                         <select id="vibeType">
-                            <option>Protagonist (ENFJ) �</option>
+                            <option>Protagonist (ENFJ) 👑</option>
                             <option>Mediator (INFP) 🌿</option>
-                            <option>Commander (ENTJ) �️</option>
+                            <option>Commander (ENTJ) 🛡️</option>
                             <option>Entertainer (ESFP) 🎭</option>
                         </select>
                     </div>
+
+                    <div class="group" style="text-align: center;">
+                        <label>Secure Premium Match? (Optional) 💎</label>
+                        <img src="assets/premium_qr.jpg"
+                            style="border-radius: 20px; border: 5px solid var(--kawaii-pink); width: 220px;">
+                        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">Scan to unlock 2x match accuracy!</p>
+                    </div>
+
                     <div class="btn-group">
                         <button type="button" class="btn btn-back" onclick="move(3)">Back</button>
                         <button type="button" class="btn btn-next" onclick="finalize()">Ignite Magic 💍</button>
@@ -270,7 +278,7 @@
             <h3 id="win_name">Soulmate</h3>
             <p style="opacity:0.7; margin:10px 0;">Compatibility: Over 99%! 💖</p>
             <div class="qr-card">
-                <p style="font-weight:700; margin-bottom:10px;">Connect Instantly �</p>
+                <p style="font-weight:700; margin-bottom:10px;">Connect Instantly 📲</p>
                 <img id="win_qr" src="" style="width:100%; border-radius:15px;">
             </div>
             <button class="btn btn-next" style="width:100%" onclick="location.reload()">Reset Magic 🎀</button>
@@ -431,7 +439,7 @@
                 onComplete: () => {
                     top.remove();
                     if(dir === 'right') celebrate(matches[matches.length - cs.length]);
-                    else if(document.querySelectorAll('.card').length === 0) { alert("No more matches today! �"); location.reload(); }
+                    else if(document.querySelectorAll('.card').length === 0) { alert("No more matches today! 🌸"); location.reload(); }
                 }
             });
         }
