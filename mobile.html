@@ -453,6 +453,18 @@
         function render() {
             const deck = document.getElementById('deck');
             deck.innerHTML = '';
+            
+            if (!matches || matches.length === 0) {
+                deck.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:var(--kawaii-pink-dark); background:rgba(255,255,255,0.3); border-radius:30px; margin-top:20px;">
+                        <div style="font-size:3.5rem; margin-bottom:15px;">☁️</div>
+                        <h2 style="font-weight:800;">The Sky is Quiet...</h2>
+                        <p style="font-weight:600; opacity:0.8; font-size:0.9rem;">Waiting for more cuties to join! <br>Check back soon ✨</p>
+                    </div>`;
+                document.querySelector('.swipe-actions').style.display = 'none';
+                return;
+            }
+
             matches.forEach((u, i) => {
                 const c = document.createElement('div');
                 c.className = 'card';
