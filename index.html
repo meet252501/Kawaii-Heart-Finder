@@ -1673,12 +1673,7 @@
         </div>
         <h1>Kawaii Heart Finder</h1>
         
-        <!-- MOBILE WARNING OVERLAY -->
-        <div id="mobileWarning" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(0,0,0,0.85); color:white; padding:30px; border-radius:30px; z-index:99999; width:90%; text-align:center; border: 2px solid var(--kawaii-pink);">
-            <h2 style="color:var(--kawaii-pink); margin-bottom:15px; font-size:1.8rem;">📱 Mobile Detected!</h2>
-            <p style="margin-bottom:20px; font-size:1rem; line-height:1.5;">This magical world is <b>heavily animated</b> and looks best on a big screen (Laptop/Desktop). 💻✨<br><br>On mobile, it might lag or look squeezed.</p>
-            <button class="enter-btn" style="padding:15px 30px; font-size:1rem;" onclick="enableLiteMode()">Continue in Lite Mode 🚀</button>
-        </div>
+
 
         <div id="entryButtons">
             <button class="enter-btn" onclick="startApp()">Enter the Magic 🌹</button>
@@ -1947,7 +1942,7 @@
     </div>
 
     <!-- Mobile Warning Overlay -->
-    <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
+    <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 200000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
         <img src="assets/mascot.png" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px;">
         <h2 style="color: var(--kawaii-pink-dark); margin-bottom: 15px;">💖 Oh no, cutie! 💖</h2>
         <p style="font-size: 1.1rem; color: var(--kawaii-text); margin-bottom: 20px;">
@@ -1967,7 +1962,7 @@
         function checkMobile() {
             if (window.innerWidth <= 768) {
                 // Show Warning
-                document.getElementById('mobileWarning').style.display = 'block';
+                document.getElementById('mobileWarning').style.display = 'flex';
                 // Hide entry buttons until user decides
                 const entryButtons = document.getElementById('entryButtons');
                 if (entryButtons) entryButtons.style.display = 'none';
