@@ -2,17 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kawaii Heart Seeker | Mobile</title>
     <!-- Kawaii Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --kawaii-pink: #ffc2d1;
-            --kawaii-pink-dark: #ff85a1;
-            --kawaii-text: #4a3050;
-            --kawaii-white: #ffffff;
-            --bg-main: #fff5f7;
+            --kawaii-pink: #ff9a9e;
+            --kawaii-grad-1: #fecfef;
+            --kawaii-grad-2: #ff9a9e;
+            --text-color: #5d405c;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(255, 105, 135, 0.25);
         }
 
         * {
@@ -24,75 +27,102 @@
         }
 
         body {
-            background: var(--bg-main);
+            background: linear-gradient(135deg, var(--kawaii-grad-1) 0%, var(--kawaii-grad-2) 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0px 15px 40px 15px; /* Added padding at bottom */
-            color: var(--kawaii-text);
+            padding: 40px 20px;
+            color: var(--text-color);
             overflow-x: hidden;
         }
 
-        /* Ambient Background (CSS Only - No JS) */
-        .bg-pattern {
+        /* Floating Background Particles (CSS Only) */
+        .bg-particle {
             position: fixed;
-            inset: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
             z-index: -1;
-            background-image: radial-gradient(var(--kawaii-pink) 2px, transparent 2px);
-            background-size: 30px 30px;
-            opacity: 0.3;
+            animation: float infinite linear;
+        }
+        .p1 { width: 100px; height: 100px; top: 10%; left: -20px; animation-duration: 8s; }
+        .p2 { width: 150px; height: 150px; bottom: 10%; right: -30px; animation-duration: 12s; }
+        .p3 { width: 50px; height: 50px; top: 40%; right: 10%; animation-duration: 6s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
-        /* Mobile Header */
+        /* Header */
         header {
             text-align: center;
-            margin-top: 40px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             width: 100%;
         }
 
         .mascot-img {
-            width: 120px;
-            height: auto;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             margin-bottom: 10px;
+            border: 4px solid var(--white);
+            box-shadow: var(--shadow);
             animation: bounce 2s infinite ease-in-out;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-5px); }
         }
 
         h1 {
             font-size: 1.8rem;
-            color: var(--kawaii-pink-dark);
+            color: var(--white);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 5px;
         }
 
         .subtitle {
-            font-size: 1rem;
-            opacity: 0.8;
+            font-size: 0.95rem;
+            color: var(--white);
+            opacity: 0.9;
+            font-weight: 500;
         }
 
-        /* Simplified Card */
+        /* Glassmorphism Card */
         .kawaii-box {
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px 20px;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.15);
-            border: 2px solid var(--kawaii-white);
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px 25px;
+            border-radius: 35px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
         }
 
-        /* Form Elements - Touch Optimized */
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Forms */
+        .group {
+            margin-bottom: 20px;
+        }
+
         label {
             display: block;
             font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: var(--kawaii-pink-dark);
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            padding-left: 5px;
         }
 
         input[type="text"],
@@ -100,106 +130,124 @@
         input[type="number"],
         select {
             width: 100%;
-            padding: 15px; /* Large touch target */
-            background: var(--kawaii-white);
-            border: 2px solid var(--kawaii-pink);
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
             border-radius: 20px;
-            font-size: 16px; /* Prevents iOS zoom */
-            color: var(--kawaii-text);
-            margin-bottom: 20px;
-            outline: none;
-            transition: border-color 0.3s;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
         }
 
         input:focus, select:focus {
-            border-color: var(--kawaii-pink-dark);
-            box-shadow: 0 5px 15px rgba(255, 133, 161, 0.2);
+            border-color: #ff9a9e;
+            background: #fff;
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(255, 105, 135, 0.15);
+            outline: none;
         }
 
-        /* Chip Selection */
+        /* Chips */
         .chips {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
 
         .chip {
-            padding: 10px 15px;
-            background: #fff;
-            border: 2px solid var(--kawaii-pink);
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 105, 135, 0.2);
             border-radius: 50px;
             font-size: 0.9rem;
             font-weight: 600;
             flex: 1 1 auto;
             text-align: center;
+            transition: all 0.2s;
+            color: var(--text-color);
         }
 
         .chip.selected {
-            background: var(--kawaii-pink-dark);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             color: white;
-            border-color: var(--kawaii-pink-dark);
+            border-color: transparent;
+            box-shadow: 0 5px 10px rgba(255, 105, 135, 0.3);
+            transform: translateY(-2px);
         }
 
-        /* Primary Button */
+        /* Button */
         .btn-primary {
             width: 100%;
-            padding: 18px;
-            background: var(--kawaii-pink-dark);
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             color: white;
             border: none;
             border-radius: 50px;
             font-size: 1.2rem;
             font-weight: 700;
-            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
             margin-top: 10px;
             cursor: pointer;
-            -webkit-appearance: none; /* iOS reset */
+            -webkit-appearance: none;
             appearance: none;
-        }
-        
-        .btn-primary:active {
-            transform: scale(0.98);
+            transition: transform 0.1s;
         }
 
-        /* Utility */
-        .hidden { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease-out; }
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        .hidden { display: none !important; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Spinner */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: #ff6b6b;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="bg-pattern"></div>
+    <div class="bg-particle p1"></div>
+    <div class="bg-particle p2"></div>
+    <div class="bg-particle p3"></div>
 
     <header>
         <img src="assets/mascot.png" class="mascot-img" alt="Mascot">
-        <h1>Kawaii Heart Finder</h1>
-        <div class="subtitle">Mobile Lite Edition ✨</div>
+        <h1>Kawaii Match</h1>
+        <div class="subtitle">Premium Mobile Edition ✨</div>
     </header>
 
-    <div class="kawaii-box fade-in" id="mobileForm">
+    <div class="kawaii-box" id="mobileForm">
         <!-- Step 1 -->
         <div class="step active" id="step1">
             <div class="group">
-                <label>What's your name? 🌸</label>
-                <input type="text" id="name" placeholder="Super Cute Name">
+                <label>Name 🌸</label>
+                <input type="text" id="name" placeholder="Your name...">
             </div>
             <div class="group">
-                <label>Your Email? 💌</label>
-                <input type="email" id="email" placeholder="you@love.com">
+                <label>Email 💌</label>
+                <input type="email" id="email" placeholder="you@example.com">
             </div>
             <div class="group">
-                <label>Your Age? 🎂</label>
+                <label>Age 🎂</label>
                 <input type="number" id="age" placeholder="18+">
             </div>
              <div class="group">
-                <label>I am a... ⚧️</label>
+                <label>I am... ⚧️</label>
                 <div class="chips" id="genderChips">
                     <div class="chip" onclick="selectGender(this, 'Male')">Boy 💙</div>
                     <div class="chip" onclick="selectGender(this, 'Female')">Girl 💖</div>
@@ -209,40 +257,36 @@
             </div>
 
             <div class="group">
-                <label>Looking for... 🔭</label>
+                <label>Interested in... 🔭</label>
                 <div class="chips" id="interestChips">
                     <div class="chip" onclick="selectInterest(this, 'Female')">Girls 👩</div>
                     <div class="chip" onclick="selectInterest(this, 'Male')">Boys 👨</div>
-                    <div class="chip" onclick="selectInterest(this, 'Both')">Both 🌈</div>
+                    <div class="chip" onclick="selectInterest(this, 'Both')">Everyone 🌈</div>
                 </div>
                 <input type="hidden" id="interestedIn">
             </div>
 
-            <button class="btn-primary" onclick="submitMobileForm()">Find My Match! 💖</button>
+            <button class="btn-primary" onclick="submitMobileForm()">Find My Soulmate 💖</button>
         </div>
         
         <!-- Loading State -->
-        <div class="step hidden" id="loadingStep" style="text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">🔮</div>
-            <h3>Scanning the Stars...</h3>
-            <p>Finding your perfect anime soulmate!</p>
+        <div class="step hidden" id="loadingStep" style="text-align: center; padding: 40px 0;">
+            <span class="loader"></span>
+            <h3 style="margin-top: 20px; color: #5d405c;">Connecting Stars...</h3>
         </div>
 
         <!-- Success State -->
-        <div class="step hidden" id="successStep" style="text-align: center;">
-            <h2 style="color: var(--kawaii-pink-dark);">Success! 💌</h2>
-            <p>We found a match! Check your email to see who it is!</p>
-            <button class="btn-primary" onclick="location.reload()" style="background: var(--kawaii-mint); margin-top: 20px;">Again!</button>
+        <div class="step hidden" id="successStep" style="text-align: center; padding: 20px 0;">
+            <div style="font-size: 4rem; margin-bottom: 10px;">💌</div>
+            <h2 style="color: #ff6b6b; margin-bottom: 10px;">It's a Match!</h2>
+            <p style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 20px;">We've sent the details to your email!</p>
+            <button class="btn-primary" onclick="location.reload()" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #5d405c; box-shadow: 0 10px 25px rgba(168, 237, 234, 0.4);">Check Again</button>
         </div>
     </div>
 
     <script>
-        // Simple Vanilla JS for Mobile Logic
-        
         function selectGender(chip, value) {
-            // Reset
             document.querySelectorAll('#genderChips .chip').forEach(c => c.classList.remove('selected'));
-            // Set
             chip.classList.add('selected');
             document.getElementById('gender').value = value;
         }
@@ -261,25 +305,31 @@
             const interestedIn = document.getElementById('interestedIn').value;
 
             if(!name || !email || !age || !gender || !interestedIn) {
-                alert("Please fill in all the cute details! 🥺");
+                alert("Please fill in all fields! 🥺");
                 return;
             }
 
-            // Show Loading
+            // UI Feedback
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('loadingStep').classList.remove('hidden');
 
+            // Construct FormData (Fixing the JSON issue)
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('age', age);
+            formData.append('gender', gender);
+            formData.append('interestedIn', interestedIn);
+            formData.append('bio', "Mobile User 📱");
+            formData.append('vibe', "Chill");
+            formData.append('theme', "Mobile");
+            formData.append('mbti', "Unknown");
+
             try {
+                // Sending as multipart/form-data implicitly by standard fetch with FormData body
                 const response = await fetch('/api/register', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name, email, age, gender, interestedIn,
-                        bio: "Mobile User 📱",
-                        vibe: "Chill",
-                        theme: "Default",
-                        mbti: "Unknown"
-                    })
+                    body: formData // No Content-Type header needed, browser sets it with boundary
                 });
 
                 const data = await response.json();
@@ -288,13 +338,14 @@
                     setTimeout(() => {
                         document.getElementById('loadingStep').classList.add('hidden');
                         document.getElementById('successStep').classList.remove('hidden');
-                    }, 1500); // Fake delay for magic feel
+                    }, 1000);
                 } else {
-                    alert(data.message || "Oops! Something went wrong.");
+                    alert(data.message || data.error || "Something went wrong.");
                     location.reload();
                 }
             } catch (e) {
-                alert("Server error! Check your connection.");
+                console.error(e);
+                alert("Connection failed! Please try again.");
                 location.reload();
             }
         }
