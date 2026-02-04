@@ -1942,13 +1942,13 @@
 
     <!-- Mobile Warning Overlay -->
     <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.98); z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; pointer-events: auto;">
-        <img src="assets/mascot.png" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px;">
-        <h2 style="color: var(--kawaii-pink-dark); margin-bottom: 15px;">💖 Oh no, cutie! 💖</h2>
-        <p style="font-size: 1.1rem; color: var(--kawaii-text); margin-bottom: 20px;">
-            This experience is best viewed on a desktop or laptop for full sparkle! ✨<br>
-            Some animations and effects might be disabled on mobile to keep things smooth.
+        <img src="assets/mascot.png" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; position: relative; z-index: 2;">
+        <h2 style="color: #ff1a7d; margin-bottom: 15px; position: relative; z-index: 2; text-shadow: 0 2px 0 white;">💖 Oh no, cutie! 💖</h2>
+        <p style="font-size: 1.1rem; color: #333; margin-bottom: 20px; font-weight: 600; padding: 0 20px; position: relative; z-index: 2;">
+            This magic world is designed for <b>Desktop/Laptop</b>! ✨<br><br>
+            Please <b>Switch to Desktop</b> for the full experience, or continue in Lite Mode (some effects disabled).
         </p>
-        <div role="button" onclick="enableLiteMode()" ontouchstart="enableLiteMode()" style="background: var(--kawaii-pink-dark); color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; margin-top: 20px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3); font-weight: bold; width: max-content; max-width: 80%; text-align: center; position: relative; z-index: 2147483647;">Enter Site (Lite Mode) 🚀</div>
+        <div role="button" onclick="enableLiteMode()" ontouchstart="enableLiteMode()" style="background: #ff1a7d; color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(255, 26, 125, 0.3); font-weight: bold; width: max-content; max-width: 90%; text-align: center; position: relative; z-index: 2147483647; user-select: none;">Continue on Mobile 📱</div>
     </div>
 
     <script>
